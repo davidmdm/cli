@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/davidmdm/cli/flags"
 )
 
 func main() {
 
-	args := flags.ParseStrings(os.Args[1:])
+	args := flags.Parse()
 
 	namespace := args.StringFlag("namespace")
 	if namespace == nil {

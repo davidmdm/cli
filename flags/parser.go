@@ -2,6 +2,7 @@ package flags
 
 import (
 	"regexp"
+	"os"
 	"strings"
 
 	"github.com/davidmdm/cli/util"
@@ -10,8 +11,13 @@ import (
 var doubleDashEqualRegex = regexp.MustCompile(`^--\w+=\w*$`)
 var dashNoEqual = regexp.MustCompile(`^--?[^=]+$`)
 
-// ParseStrings transforms a slice of strings into a flagMap
-func ParseStrings(args []string) Args {
+// Parse parses os.Args
+func Parse() Args {
+	return parseStrings(os.Args[1:])
+}
+
+// parseStrings transforms a slice of strings into a flagMap
+func parseStrings(args []string) Args {
 
 	parsedArgs := newArgs()
 
