@@ -1,7 +1,5 @@
 package util
 
-import "strings"
-
 // FilterStrings returns a new slice of strings by applying a predicate funtion to the original slice
 func FilterStrings(sl []string, pred func(string, int) bool) []string {
 	result := []string{}
@@ -26,9 +24,13 @@ func GetIndexes(sl []string, pred func(string) bool) []int {
 
 // StripDashPrefix returns a new string with the dashes stripped from the prefix
 func StripDashPrefix(str string) string {
-	idx := strings.LastIndexByte(str, '-')
-	if idx < 0 {
-		return str
+	idx := -1
+	for _, b := range []byte(str) {
+		if b == '-' {
+			idx++
+		} else {
+			break
+		}
 	}
 	return str[idx+1:]
 }

@@ -1,15 +1,14 @@
 package flags
 
 import (
-	"regexp"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/davidmdm/cli/util"
 )
 
-var doubleDashEqualRegex = regexp.MustCompile(`^--\w+=\w*$`)
-var dashNoEqual = regexp.MustCompile(`^--?[^=]+$`)
+var flagRegex = regexp.MustCompile(`^--?[^-]`)
 
 // Parse parses os.Args
 func Parse() Args {
@@ -21,21 +20,19 @@ func parseStrings(args []string) Args {
 
 	parsedArgs := newArgs()
 
-	doubleDashEqualFlags := util.FilterStrings(args, func(str string, _ int) bool { return doubleDashEqualRegex.MatchString(str) })
-	for _, flag := range doubleDashEqualFlags {
-		split := strings.Split(flag, "=")
-		parsedArgs.addFlag(split[0], split[1])
-	}
-
-	args = util.FilterStrings(args, func(str string, _ int) bool { return !doubleDashEqualRegex.MatchString(str) })
-
-	dashNoEqualIndexes := util.GetIndexes(args, func(str string) bool { return dashNoEqual.MatchString(str) })
-	dashCount := len(dashNoEqualIndexes)
+	flagIndexes := util.GetIndexes(args, func(str string) bool { return flagRegex.MatchString(str) })
+	flagCount := len(flagIndexes)
 	nonPositionalIndexMap := make(map[int]bool)
 
-	for idx, pos := range dashNoEqualIndexes {
+	for idx, pos := range flagIndexes {
 		nonPositionalIndexMap[pos] = true
-		if idx < dashCount-1 && dashNoEqualIndexes[idx+1] == pos+1 {
+		flag := args[pos]
+
+		doubleDash := flag[:2] == "--"
+		equalIdx := strings.IndexByte(flag, '=')
+		if doubleDash && equalIdx > -1 {
+			parsedArgs.addFlag(flag[:equalIdx], flag[equalIdx+1:])
+		} else if idx < flagCount-1 && flagIndexes[idx+1] == pos+1 {
 			//the dash elems are adjacent interpret position as bool
 			parsedArgs.addFlag(args[pos], true)
 		} else if pos == len(args)-1 {
