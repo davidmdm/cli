@@ -74,18 +74,18 @@ func (args Args) IntFlag(key string) *int {
 	if !ok || len(v) == 0 {
 		return nil
 	}
-	switch typedValue := v[0].(type) {
-	case string:
-		result, err := strconv.Atoi(typedValue)
+	for _, val := range v {
+		str, ok := val.(string)
+		if !ok {
+			continue
+		}
+		num, err := strconv.Atoi(str)
 		if err != nil {
 			return nil
 		}
-		return &result
-	case int:
-		return &typedValue
-	default:
-		return nil
+		return &num
 	}
+	return nil
 }
 
 // Positionals returns the parsed positinal arguments
