@@ -10,8 +10,8 @@ import (
 var doubleDashEqualRegex = regexp.MustCompile(`^--\w+=\w*$`)
 var dashNoEqual = regexp.MustCompile(`^--?[^=]+$`)
 
-// Parse transforms a slice of strings into a flagMap
-func Parse(args []string) Args {
+// ParseStrings transforms a slice of strings into a flagMap
+func ParseStrings(args []string) Args {
 
 	parsedArgs := newArgs()
 

@@ -9,10 +9,15 @@ import (
 
 func main() {
 
-	args := os.Args[1:]
+	args := flags.ParseStrings(os.Args[1:])
 
-	fm := flags.Parse(args)
+	namespace := args.StringFlag("namespace")
+	if namespace == nil {
+		fmt.Println("namespace is nil")
+	} else {
+		fmt.Println("value of namespace:", *namespace)
+	}
 
-	fmt.Println("orginal:", args)
-	fmt.Printf("args: %+v\n", fm)
+	fmt.Printf("args: %+v\n", args)
+
 }
