@@ -17,6 +17,12 @@ func (args Args) addFlag(key string, value interface{}) {
 	args.flags[sanitizedKey] = append(args.flags[sanitizedKey], value)
 }
 
+// HasFlag returns whether a key is in the FlagSet
+func (args Args) HasFlag(key string) bool {
+	_, ok := args.flags[key]
+	return ok
+}
+
 // StringFlag returns a pointer to a string for the value of the flag key
 func (args Args) StringFlag(key string) *string {
 	v, ok := args.flags[key]
